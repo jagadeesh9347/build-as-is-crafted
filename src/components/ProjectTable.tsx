@@ -82,7 +82,7 @@ const projects: Project[] = [
 const getStatusColor = (status: string) => {
   switch (status) {
     case "In-progress":
-      return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      return "bg-orange-100 text-orange-800 border-orange-200";
     case "Need to start":
       return "bg-blue-100 text-blue-800 border-blue-200";
     case "Complete":
@@ -99,9 +99,9 @@ const getPriorityColor = (priority: string) => {
     case "High":
       return "bg-red-100 text-red-700 border-red-200";
     case "Medium":
-      return "bg-orange-100 text-orange-700 border-orange-200";
+      return "bg-yellow-100 text-yellow-700 border-yellow-200";
     case "Low":
-      return "bg-blue-100 text-blue-700 border-blue-200";
+      return "bg-green-100 text-green-700 border-green-200";
     default:
       return "bg-gray-100 text-gray-700 border-gray-200";
   }
@@ -121,72 +121,72 @@ const ProjectTable = ({ searchTerm }: ProjectTableProps) => {
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
-        <thead>
-          <tr className="border-b border-gray-200">
-            <th className="text-left py-3 px-4 font-medium text-gray-600">#</th>
-            <th className="text-left py-3 px-4 font-medium text-gray-600">Job Request</th>
-            <th className="text-left py-3 px-4 font-medium text-gray-600">Submitted</th>
-            <th className="text-left py-3 px-4 font-medium text-gray-600">Status</th>
-            <th className="text-left py-3 px-4 font-medium text-gray-600">Submitter</th>
-            <th className="text-left py-3 px-4 font-medium text-gray-600">URL</th>
-            <th className="text-left py-3 px-4 font-medium text-gray-600">Assigned</th>
-            <th className="text-left py-3 px-4 font-medium text-gray-600">Priority</th>
-            <th className="text-left py-3 px-4 font-medium text-gray-600">Due Date</th>
-            <th className="text-left py-3 px-4 font-medium text-gray-600">Est. Value</th>
+        <thead className="bg-gray-50/50 border-b border-gray-200">
+          <tr>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">#</th>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Job Request</th>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Submitted</th>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Status</th>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Submitter</th>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">URL</th>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Assigned</th>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Priority</th>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Due Date</th>
+            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Est. Value</th>
           </tr>
         </thead>
         <tbody>
-          {filteredProjects.map((project) => (
-            <tr key={project.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-              <td className="py-4 px-4 text-sm text-gray-600">{project.id}</td>
-              <td className="py-4 px-4">
-                <div className="font-medium text-gray-900 max-w-xs truncate">
+          {filteredProjects.map((project, index) => (
+            <tr key={project.id} className={`border-b border-gray-100 hover:bg-gray-50/50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}>
+              <td className="py-4 px-6 text-sm text-gray-600 font-medium">{project.id}</td>
+              <td className="py-4 px-6">
+                <div className="font-medium text-gray-900 text-sm max-w-xs">
                   {project.jobRequest}
                 </div>
               </td>
-              <td className="py-4 px-4 text-sm text-gray-600">
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
+              <td className="py-4 px-6 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-gray-400" />
                   {project.submitted}
                 </div>
               </td>
-              <td className="py-4 px-4">
-                <Badge className={`${getStatusColor(project.status)} border font-normal`}>
+              <td className="py-4 px-6">
+                <Badge className={`${getStatusColor(project.status)} border font-medium text-xs px-2 py-1 rounded-md`}>
                   {project.status}
                 </Badge>
               </td>
-              <td className="py-4 px-4 text-sm text-gray-700">
-                <div className="flex items-center gap-1">
-                  <User className="w-3 h-3" />
+              <td className="py-4 px-6 text-sm text-gray-700">
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-gray-400" />
                   {project.submitter}
                 </div>
               </td>
-              <td className="py-4 px-4">
-                <Button variant="ghost" size="sm" className="p-0 h-auto">
-                  <ExternalLink className="w-3 h-3 mr-1" />
-                  <span className="text-blue-600 hover:text-blue-800 text-xs">
+              <td className="py-4 px-6">
+                <Button variant="ghost" size="sm" className="p-0 h-auto hover:bg-transparent">
+                  <div className="flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm">
+                    <ExternalLink className="w-3 h-3" />
                     {project.url}
-                  </span>
+                  </div>
                 </Button>
               </td>
-              <td className="py-4 px-4 text-sm text-gray-700">
-                <div className="flex items-center gap-1">
-                  <User className="w-3 h-3" />
+              <td className="py-4 px-6 text-sm text-gray-700">
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-gray-400" />
                   {project.assigned}
                 </div>
               </td>
-              <td className="py-4 px-4">
-                <Badge className={`${getPriorityColor(project.priority)} border font-normal`}>
+              <td className="py-4 px-6">
+                <Badge className={`${getPriorityColor(project.priority)} border font-medium text-xs px-2 py-1 rounded-md`}>
                   {project.priority}
                 </Badge>
               </td>
-              <td className="py-4 px-4 text-sm text-gray-600">
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-3 h-3" />
+              <td className="py-4 px-6 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-gray-400" />
                   {project.dueDate}
                 </div>
               </td>
-              <td className="py-4 px-4 text-sm font-medium text-gray-900">
+              <td className="py-4 px-6 text-sm font-semibold text-gray-900">
                 {project.estValue}
               </td>
             </tr>
