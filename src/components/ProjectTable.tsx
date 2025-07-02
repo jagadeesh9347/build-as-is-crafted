@@ -1,7 +1,9 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ExternalLink } from "lucide-react";
+import { useState } from "react";
 
 interface Project {
   id: number;
@@ -79,6 +81,9 @@ const projects: Project[] = [
   }
 ];
 
+const statusOptions = ["In-progress", "Need to start", "Complete", "Blocked"] as const;
+const priorityOptions = ["High", "Medium", "Low"] as const;
+
 const getStatusColor = (status: string) => {
   switch (status) {
     case "In-progress":
@@ -112,11 +117,25 @@ interface ProjectTableProps {
 }
 
 const ProjectTable = ({ searchTerm }: ProjectTableProps) => {
-  const filteredProjects = projects.filter(project =>
+  const [projectData, setProjectData] = useState(projects);
+
+  const filteredProjects = projectData.filter(project =>
     project.jobRequest.toLowerCase().includes(searchTerm.toLowerCase()) ||
     project.submitter.toLowerCase().includes(searchTerm.toLowerCase()) ||
     project.assigned.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const updateProjectStatus = (projectId: number, newStatus: Project['status']) => {
+    setProjectData(prev => prev.map(project => 
+      project.id === projectId ? { ...project, status: newStatus } : project
+    ));
+  };
+
+  const updateProjectPriority = (projectId: number, newPriority: Project['priority']) => {
+    setProjectData(prev => prev.map(project => 
+      project.id === projectId ? { ...project, priority: newPriority } : project
+    ));
+  };
 
   return (
     <div className="overflow-x-auto">
@@ -147,9 +166,25 @@ const ProjectTable = ({ searchTerm }: ProjectTableProps) => {
               </td>
               <td className="border-r border-gray-100 px-3 py-2 text-xs text-gray-600 bg-white">{project.submitted}</td>
               <td className="border-r border-gray-100 px-3 py-2 bg-white">
-                <Badge className={`${getStatusColor(project.status)} text-xs px-2 py-0.5 rounded-sm font-normal`}>
-                  {project.status}
-                </Badge>
+                <Select
+                  value={project.status}
+                  onValueChange={(value: Project['status']) => updateProjectStatus(project.id, value)}
+                >
+                  <SelectTrigger className="w-auto h-auto p-0 border-none bg-transparent hover:bg-gray-50">
+                    <Badge className={`${getStatusColor(project.status)} text-xs px-2 py-0.5 rounded-sm font-normal cursor-pointer`}>
+                      {project.status}
+                    </Badge>
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-gray-300 shadow-lg z-50">
+                    {statusOptions.map((status) => (
+                      <SelectItem key={status} value={status} className="text-xs">
+                        <Badge className={`${getStatusColor(status)} text-xs px-2 py-0.5 rounded-sm font-normal`}>
+                          {status}
+                        </Badge>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </td>
               <td className="border-r border-gray-100 px-3 py-2 text-xs text-gray-700 bg-white">{project.submitter}</td>
               <td className="border-r border-gray-100 px-3 py-2 bg-white">
@@ -162,9 +197,25 @@ const ProjectTable = ({ searchTerm }: ProjectTableProps) => {
               </td>
               <td className="border-r border-gray-100 px-3 py-2 text-xs text-gray-700 bg-white">{project.assigned}</td>
               <td className="border-r border-gray-100 px-3 py-2 bg-white">
-                <Badge className={`${getPriorityColor(project.priority)} text-xs px-2 py-0.5 rounded-sm font-normal`}>
-                  {project.priority}
-                </Badge>
+                <Select
+                  value={project.priority}
+                  onValueChange={(value: Project['priority']) => updateProjectPriority(project.id, value)}
+                >
+                  <SelectTrigger className="w-auto h-auto p-0 border-none bg-transparent hover:bg-gray-50">
+                    <Badge className={`${getPriorityColor(project.priority)} text-xs px-2 py-0.5 rounded-sm font-normal cursor-pointer`}>
+                      {project.priority}
+                    </Badge>
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-gray-300 shadow-lg z-50">
+                    {priorityOptions.map((priority) => (
+                      <SelectItem key={priority} value={priority} className="text-xs">
+                        <Badge className={`${getPriorityColor(priority)} text-xs px-2 py-0.5 rounded-sm font-normal`}>
+                          {priority}
+                        </Badge>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </td>
               <td className="border-r border-gray-100 px-3 py-2 text-xs text-gray-600 bg-white">{project.dueDate}</td>
               <td className="px-3 py-2 text-xs font-medium text-gray-900 bg-white">{project.estValue}</td>
