@@ -1,7 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, Calendar, User } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 interface Project {
   id: number;
@@ -82,15 +82,15 @@ const projects: Project[] = [
 const getStatusColor = (status: string) => {
   switch (status) {
     case "In-progress":
-      return "bg-orange-100 text-orange-800 border-orange-200";
+      return "bg-orange-100 text-orange-700 border-orange-200";
     case "Need to start":
-      return "bg-blue-100 text-blue-800 border-blue-200";
+      return "bg-blue-100 text-blue-700 border-blue-200";
     case "Complete":
-      return "bg-green-100 text-green-800 border-green-200";
+      return "bg-green-100 text-green-700 border-green-200";
     case "Blocked":
-      return "bg-red-100 text-red-800 border-red-200";
+      return "bg-red-100 text-red-700 border-red-200";
     default:
-      return "bg-gray-100 text-gray-800 border-gray-200";
+      return "bg-gray-100 text-gray-700 border-gray-200";
   }
 };
 
@@ -120,75 +120,54 @@ const ProjectTable = ({ searchTerm }: ProjectTableProps) => {
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead className="bg-gray-50/50 border-b border-gray-200">
-          <tr>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">#</th>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Job Request</th>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Submitted</th>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Status</th>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Submitter</th>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">URL</th>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Assigned</th>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Priority</th>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Due Date</th>
-            <th className="text-left py-4 px-6 font-medium text-gray-700 text-sm">Est. Value</th>
+      <table className="w-full border-collapse">
+        {/* Header Row - Google Sheets style */}
+        <thead>
+          <tr className="bg-gray-50">
+            <th className="border-r border-gray-200 px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0">#</th>
+            <th className="border-r border-gray-200 px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0 min-w-[300px]">Job Request</th>
+            <th className="border-r border-gray-200 px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0">Submitted</th>
+            <th className="border-r border-gray-200 px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0">Status</th>
+            <th className="border-r border-gray-200 px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0">Submitter</th>
+            <th className="border-r border-gray-200 px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0">URL</th>
+            <th className="border-r border-gray-200 px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0">Assigned</th>
+            <th className="border-r border-gray-200 px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0">Priority</th>
+            <th className="border-r border-gray-200 px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0">Due Date</th>
+            <th className="px-3 py-2 text-left text-xs font-medium text-gray-700 bg-gray-50 sticky top-0">Est. Value</th>
           </tr>
         </thead>
         <tbody>
           {filteredProjects.map((project, index) => (
-            <tr key={project.id} className={`border-b border-gray-100 hover:bg-gray-50/50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}>
-              <td className="py-4 px-6 text-sm text-gray-600 font-medium">{project.id}</td>
-              <td className="py-4 px-6">
-                <div className="font-medium text-gray-900 text-sm max-w-xs">
+            <tr key={project.id} className="hover:bg-blue-50 border-b border-gray-100">
+              <td className="border-r border-gray-100 px-3 py-2 text-xs text-gray-600 bg-white">{project.id}</td>
+              <td className="border-r border-gray-100 px-3 py-2 bg-white">
+                <div className="text-xs text-gray-900 max-w-xs">
                   {project.jobRequest}
                 </div>
               </td>
-              <td className="py-4 px-6 text-sm text-gray-600">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-gray-400" />
-                  {project.submitted}
-                </div>
-              </td>
-              <td className="py-4 px-6">
-                <Badge className={`${getStatusColor(project.status)} border font-medium text-xs px-2 py-1 rounded-md`}>
+              <td className="border-r border-gray-100 px-3 py-2 text-xs text-gray-600 bg-white">{project.submitted}</td>
+              <td className="border-r border-gray-100 px-3 py-2 bg-white">
+                <Badge className={`${getStatusColor(project.status)} text-xs px-2 py-0.5 rounded-sm font-normal`}>
                   {project.status}
                 </Badge>
               </td>
-              <td className="py-4 px-6 text-sm text-gray-700">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-gray-400" />
-                  {project.submitter}
-                </div>
-              </td>
-              <td className="py-4 px-6">
+              <td className="border-r border-gray-100 px-3 py-2 text-xs text-gray-700 bg-white">{project.submitter}</td>
+              <td className="border-r border-gray-100 px-3 py-2 bg-white">
                 <Button variant="ghost" size="sm" className="p-0 h-auto hover:bg-transparent">
-                  <div className="flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm">
+                  <div className="flex items-center gap-1 text-blue-600 hover:text-blue-800 text-xs">
                     <ExternalLink className="w-3 h-3" />
                     {project.url}
                   </div>
                 </Button>
               </td>
-              <td className="py-4 px-6 text-sm text-gray-700">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-gray-400" />
-                  {project.assigned}
-                </div>
-              </td>
-              <td className="py-4 px-6">
-                <Badge className={`${getPriorityColor(project.priority)} border font-medium text-xs px-2 py-1 rounded-md`}>
+              <td className="border-r border-gray-100 px-3 py-2 text-xs text-gray-700 bg-white">{project.assigned}</td>
+              <td className="border-r border-gray-100 px-3 py-2 bg-white">
+                <Badge className={`${getPriorityColor(project.priority)} text-xs px-2 py-0.5 rounded-sm font-normal`}>
                   {project.priority}
                 </Badge>
               </td>
-              <td className="py-4 px-6 text-sm text-gray-600">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-gray-400" />
-                  {project.dueDate}
-                </div>
-              </td>
-              <td className="py-4 px-6 text-sm font-semibold text-gray-900">
-                {project.estValue}
-              </td>
+              <td className="border-r border-gray-100 px-3 py-2 text-xs text-gray-600 bg-white">{project.dueDate}</td>
+              <td className="px-3 py-2 text-xs font-medium text-gray-900 bg-white">{project.estValue}</td>
             </tr>
           ))}
         </tbody>
